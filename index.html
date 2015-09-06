@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		<title>Distancia de Levenshtein</title>
+		<meta name="author" content="Santiago Montoya" />
+		<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="css/default.css" />
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<script src="js/modernizr.custom.js"></script>
+		<script src="js/jquery.js"></script>
+		<script>
+		$( document ).ready(function() {
+    		// alert( "ready!" );
+		});
+		function distancia(str1, str2) {
+			var i, j, distance;
+			var matrix = [];
+			for(i = 0; i < str1.length+1; i++) {
+				matrix[i] = [];
+				for(j = 0; j < str2.length+1; j++) {
+					matrix[i][j] = 0;
+				}
+			}
+			for(i = 1; i < str1.length+1; i++) matrix[i][0] = i;
+			for(i = 1; i < str2.length+1; i++) matrix[0][i] = i;
+			for(i = 1; i < str1.length+1; i++) {
+				for(j = 1; j < str2.length+1; j++) {
+					if(str1[i-1] === str2[j-1]) matrix[i][j] = matrix[i-1][j-1];
+					else {
+						matrix[i][j] = Math.min(
+								matrix[i-1][j] + 1,
+								matrix[i][j-1] + 1,
+								matrix[i-1][j-1] + 1
+							);
+					}
+				}
+			}
+			return matrix[i-1][j-1];
+		};		
+		function levenshtein(){
+			var one = $("#first").val();
+			var two = $("#last").val();
+			var result = distancia(one,two);
+			alert(result);
+			$("#result").text(result);
+		}
+		</script>
+	</head>
+	<body>
+		<div class="container">
+			<header class="clearfix">
+				<span>Santiago Montoya Angarita</span>
+				<h1>Distancia de Levenshtein</h1>
+			</header>	
+			<div class="main">
+				<form class="cbp-mc-form">
+						<label for="first">Primera Palabra</label>
+	  					<input type="text" id="first" name="first" placeholder="Piña">
+	  					<label for="last">Segunda Palabra</label>
+	  					<input type="text" id="last" name="last" placeholder="Anana">
+	  				<div class="cbp-mc-submit-wrap"><input class="cbp-mc-submit" id="subir" type="submit" value="Encontrar Distancia" onclick="levenshtein()">
+	  				</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
